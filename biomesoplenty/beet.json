@@ -1,0 +1,10 @@
+{
+    "id": "farmers-cutting-biomesoplenty",
+    "name": "Farmer's Cutting: Biomes O' Plenty",
+    "version": "v1.0.0",
+    "data_pack": {
+        "pack_format": 15,
+        "description": "Add Farmer's Cutting recipes to Biomes O' Plenty wood",            
+        "load": ["."]
+    }
+}
