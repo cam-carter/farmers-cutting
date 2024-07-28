@@ -1,0 +1,16 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "quark:seed_pouch"
+    }
+  ],
+  "result": [
+    {
+      "item": "minecraft:leather"
+    }
+  ],
+  "tool": {
+    "tag": "forge:shears"
+  }
+}

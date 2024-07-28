@@ -3,3 +3,4 @@ A set of datapacks that adds more [Farmer's Delight](https://modrinth.com/mod/fa
 
 Current Mods are:
 - [Biomes O' Plenty](biomesoplenty/README.md)
+- [Quark](quark/README.md)
