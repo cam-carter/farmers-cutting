@@ -7,11 +7,14 @@
   ],
   "result": [
     {
-      "item": "biomeswevegone:willow_planks"
+      "item": {
+        "count" : 1,
+        "id": "biomeswevegone:willow_planks"
+      }
     }
   ],
   "tool": {
-    "fabric:type": "farmersdelight:tool_action",
+    "fabric:type": "farmersdelight:item_ability",
     "action": "axe_dig"
   }
 }

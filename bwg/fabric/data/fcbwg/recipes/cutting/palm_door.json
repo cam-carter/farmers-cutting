@@ -7,11 +7,14 @@
   ],
   "result": [
     {
-      "item": "biomeswevegone:palm_planks"
+      "item": {
+        "count" : 1,
+        "id": "biomeswevegone:palm_planks"
+      }
     }
   ],
   "tool": {
-    "fabric:type": "farmersdelight:tool_action",
+    "fabric:type": "farmersdelight:item_ability",
     "action": "axe_dig"
   }
 }
