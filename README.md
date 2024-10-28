@@ -6,5 +6,6 @@ Fabric versions instead use [Farmer's Delight Refabricated](https://modrinth.com
 Current Mods are:
 - [BetterNether](betternether/README.md)
 - [Biomes O' Plenty](biomesoplenty/README.md)
+- [Nether's Exoticism](nethers_exoticism/README.md)
 - [Oh The Biomes We've Gone](bwg/README.md)
 - [Quark](quark/README.md)
