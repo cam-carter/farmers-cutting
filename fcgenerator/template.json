@@ -30,11 +30,10 @@
   ],
   "custom_recipes": [
     {
-      "tool": "pickaxe",
-      "ingredient": "shiny_block",
-      "result_id": "shiny_chunk",
+      "ingredient": "examplemod:shiny_block",
+      "result": "examplemod:shiny_chunk",
       "count": 4,
-      "namespace": "biomesoplenty",
+      "tool": "pickaxe",
       "filename": "shiny_block.json"
     }
   ]

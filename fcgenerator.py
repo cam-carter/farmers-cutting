@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional
 
 # Farmer's Cutting Generator (fcgenerator)
-# v0.1.0
+# v0.1.1
 
 @dataclass
 class ModConfig:
@@ -27,7 +27,7 @@ CONFIG_DIR = Path(__file__).parent / 'fcgenerator'
 
 RECIPE_TYPES = {
     "PLANKS_RECYCLE": ["door", "hanging_sign", "sign", "trapdoor"],
-    "STRIPPING": ["log", "wood", "bark"]
+    "STRIPPING": ["log", "wood", "bark", "stem", "hyphae"]
 }
 
 TOOL_ACTIONS = {
@@ -153,7 +153,10 @@ def generate_custom_recipe(recipe_info: Dict, platform: str) -> Dict:
 
 def generate_beet_files(config: ModConfig, platform: str, minecraft_version: str) -> tuple[Dict, Dict]:
     """Generate Beet configuration files."""
-    version = f"{minecraft_version}-{config.data_pack_version}-{platform}"
+    if len(config.platforms) > 1:
+        version = f"{minecraft_version}-{config.data_pack_version}-{platform}"
+    else:
+        version = f"{minecraft_version}-{config.data_pack_version}"
     
     beet_build = {
         "id": f"farmers-cutting-{config.id_suffix}",
