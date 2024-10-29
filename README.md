@@ -9,3 +9,4 @@ Current Mods are:
 - [Nether's Exoticism](nethers_exoticism/README.md)
 - [Oh The Biomes We've Gone](bwg/README.md)
 - [Quark](quark/README.md)
+- [Terrestria](terrestria/README.md)
