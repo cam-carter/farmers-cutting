@@ -21,6 +21,7 @@ class ModConfig:
     dye_recipes: List[Dict]
     overrides: List[Dict]
     custom_recipes: List[Dict]
+    enable_logging: bool = False
 
 # Constants
 CONFIG_DIR = Path(__file__).parent / 'fcgenerator'
@@ -73,10 +74,18 @@ def create_base_recipe(ingredient_key: str, ingredient_value: str) -> Dict:
         ]
     }
 
+def create_recipe_result(item_id: str, count: int = 1) -> Dict:
+    """Create a standard recipe result structure."""
+    return {
+        "item": {
+            "count": count,
+            "id": item_id
+        }
+    }
+
 def generate_cutting_recipe(config: ModConfig, wood_type: str, recipe_type: str, 
                           platform: str, wood_override: Optional[Dict] = None) -> Dict:
     """Generate a cutting recipe for a specific wood type and recipe type."""
-    # Default ingredient
     default_ingredient = f"{config.namespace}:{wood_type}_{recipe_type}"
     ingredient = wood_override.get('ingredient', default_ingredient) if wood_override else default_ingredient
     
@@ -84,29 +93,17 @@ def generate_cutting_recipe(config: ModConfig, wood_type: str, recipe_type: str,
     recipe["tool"] = set_item_ability(platform, TOOL_ACTIONS["axe"])
 
     if recipe_type in RECIPE_TYPES["PLANKS_RECYCLE"]:
-        recipe["result"] = [{
-            "item": {
-                "count": 1,
-                "id": f"{config.namespace}:{wood_type}_planks"
-            }
-        }]
+        recipe["result"] = [
+            create_recipe_result(f"{config.namespace}:{wood_type}_planks")
+        ]
     elif recipe_type in RECIPE_TYPES["STRIPPING"]:
         default_stripped = f"{config.namespace}:stripped_{wood_type}_{recipe_type}"
         stripped_item = wood_override.get('result', default_stripped) if wood_override else default_stripped
+        bark_item = wood_override.get('side_product', "farmersdelight:tree_bark") if wood_override else "farmersdelight:tree_bark"
         
         recipe["result"] = [
-            {
-                "item": {
-                    "count": 1,
-                    "id": stripped_item
-                }
-            },
-            {
-                "item": {
-                    "count": 1,
-                    "id": wood_override.get('side_product', "farmersdelight:tree_bark") if wood_override else "farmersdelight:tree_bark"
-                }
-            }
+            create_recipe_result(stripped_item),
+            create_recipe_result(bark_item)
         ]
         recipe["sound"] = {"sound_id": STRIPPING_SOUND}
         recipe["tool"] = set_item_ability(platform, TOOL_ACTIONS["axe_strip"])
@@ -120,12 +117,9 @@ def generate_dye_recipe(namespace: str, input_item: str, color: str, count: int)
     ingredient_value = input_item[1:] if is_tag else f"{namespace}:{input_item}"
     
     recipe = create_base_recipe(ingredient_key, ingredient_value)
-    recipe["result"] = [{
-        "item": {
-            "count": count,
-            "id": f"minecraft:{color}_dye"
-        }
-    }]
+    recipe["result"] = [
+        create_recipe_result(f"minecraft:{color}_dye", count)
+    ]
     recipe["tool"] = {"tag": KNIFE_TOOL_TAG}
     
     return recipe
@@ -137,12 +131,9 @@ def generate_custom_recipe(recipe_info: Dict, platform: str) -> Dict:
     ingredient_value = recipe_info['ingredient'][1:] if is_tag else recipe_info['ingredient']
 
     recipe = create_base_recipe(ingredient_key, ingredient_value)
-    recipe["result"] = [{
-        "item": {
-            "count": recipe_info['count'],
-            "id": recipe_info['result']
-        }
-    }]
+    recipe["result"] = [
+        create_recipe_result(recipe_info['result'], recipe_info['count'])
+    ]
 
     if recipe_info['tool'] == "knife":
         recipe["tool"] = {"tag": KNIFE_TOOL_TAG}
@@ -184,30 +175,53 @@ def generate_beet_files(config: ModConfig, platform: str, minecraft_version: str
 
     return beet_build, beet
 
-def write_json_file(filepath: Path, data: Dict, indent: int = 2) -> bool:
+def ensure_directory(path: Path) -> None:
+    """Ensure directory exists, create if necessary."""
+    path.mkdir(parents=True, exist_ok=True)
+
+def read_json_config(path: Path) -> Dict:
+    """Read and parse JSON config file."""
+    try:
+        with open(path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Config file not found: {path}")
+    except json.JSONDecodeError:
+        raise ValueError(f"Invalid JSON in file: {path}")
+
+def write_json_file(filepath: Path, data: Dict, indent: int = 2, log_enabled: bool = False) -> bool:
     """Write JSON data to a file with error handling."""
     try:
+        ensure_directory(filepath.parent)
         with open(filepath, 'w') as f:
             json.dump(data, f, indent=indent)
-        print(f"Generated: {filepath}")
+        if log_enabled:
+            print(f"Generated: {filepath}")
         return True
     except IOError as e:
         print(f"Error writing file {filepath}: {e}")
         return False
 
-def cleanup_old_files(mods: List[str]):
-    """Clean up old generated files and directories."""
-    print("Cleaning up old files...")
-
-    for mod in mods:
-        for directory in CLEANUP_DIRS:
-            path = Path(mod) / Path(directory)
-            if path.exists():
-                try:
-                    shutil.rmtree(path)
+def cleanup_old_files(mod: str, enable_logging: bool = False):
+    """
+    Clean up old generated files and directories for a single mod.
+    
+    :param mod: Mod namespace
+    :param enable_logging: Whether to log file operations
+    """
+    if enable_logging:
+        print(f"Cleaning up old files for {mod}...")
+        
+    for directory in CLEANUP_DIRS:
+        path = Path(mod) / Path(directory)
+        if path.exists():
+            try:
+                shutil.rmtree(path)
+                if enable_logging:
                     print(f"Removed {path}/")
-                except Exception as e:
-                    print(f"Error removing {path}/: {e}")
+            except Exception as e:
+                # Always print errors regardless of logging setting
+                print(f"Error removing {path}/: {e}")
 
 def get_override_fields(override: Dict, fields: List[str]) -> Optional[Dict]:
     """Extract specified fields from an override."""
@@ -264,7 +278,7 @@ def process_wood_recipes(config: ModConfig, wood_type: str, platform: str, outpu
         recipe = generate_cutting_recipe(config, wood_type, recipe_type, platform, wood_override)
         
         filepath = get_recipe_path(output_dir, f"{wood_type}_{recipe_type}.json")
-        if not write_json_file(filepath, recipe):
+        if not write_json_file(filepath, recipe, log_enabled=config.enable_logging):
             continue
 
 def generate_recipes(config: ModConfig, platform: str, output_dir: Path):
@@ -279,14 +293,14 @@ def generate_recipes(config: ModConfig, platform: str, output_dir: Path):
         
         filename = f"{color}_dye_from_tag.json" if input_item.startswith('#') else f"{input_item}.json"
         filepath = get_recipe_path(output_dir, filename)
-        if not write_json_file(filepath, recipe):
+        if not write_json_file(filepath, recipe, log_enabled=config.enable_logging):
             continue
 
     # Generate custom recipes
     for custom_recipe in config.custom_recipes:
         recipe = generate_custom_recipe(custom_recipe, platform)
         filepath = get_recipe_path(output_dir, custom_recipe['filename'])
-        if not write_json_file(filepath, recipe):
+        if not write_json_file(filepath, recipe, log_enabled=config.enable_logging):
             continue
 
 def process_platform(config: ModConfig, platform: str, minecraft_version: str):
@@ -305,10 +319,10 @@ def process_platform(config: ModConfig, platform: str, minecraft_version: str):
 
         # Generate beet files
         beet_build, beet = generate_beet_files(config, platform, minecraft_version)
-        if not write_json_file(base_dir / 'beet-build.json', beet_build, indent=4):
+        if not write_json_file(base_dir / 'beet-build.json', beet_build, indent=4, log_enabled=config.enable_logging):
             print(f"Error writing beet-build.json for platform {platform}")
             return
-        if not write_json_file(base_dir / 'beet.json', beet, indent=4):
+        if not write_json_file(base_dir / 'beet.json', beet, indent=4, log_enabled=config.enable_logging):
             print(f"Error writing beet.json for platform {platform}")
             return
 
@@ -340,33 +354,48 @@ def process_mod_config(mod_config_name: str, minecraft_version: str):
         platforms=mod_info.get('platforms', [DEFAULT_PLATFORM]),
         dye_recipes=mod_info.get('dye_recipes', []),
         overrides=mod_info.get('overrides', []),
-        custom_recipes=mod_info.get('custom_recipes', [])
+        custom_recipes=mod_info.get('custom_recipes', []),
+        enable_logging=mod_info.get('enable_logging', False)
     )
 
     for platform in config.platforms:
         process_platform(config, platform, minecraft_version)
 
+def load_generator_config() -> Dict:
+    """Load main generator configuration."""
+    config_path = CONFIG_DIR / 'generator_config.json'
+    return read_json_config(config_path)
+
+def get_logging_setting(mod: str) -> bool:
+    """
+    Load logging setting for a specific mod.
+    
+    :param mod: Mod name/identifier
+    :return: Whether logging is enabled for this mod
+    """
+    mod_config_path = CONFIG_DIR / f'{mod}.json'
+    try:
+        mod_info = read_json_config(mod_config_path)
+        return mod_info.get('enable_logging', False)
+    except (FileNotFoundError, ValueError):
+        return False  # Default to False if can't read config
+
+def process_mods(config: Dict) -> None:
+    """Process all mods in configuration."""
+    # Clean up files for each mod
+    for mod in config['mods']:
+        enable_logging = get_logging_setting(mod)
+        cleanup_old_files(mod, enable_logging)
+
+    # Process each mod
+    for mod in config['mods']:
+        process_mod_config(mod, config['minecraft_version'])
+
 def main():
     """Main entry point for the script."""
     try:
-        config_path = CONFIG_DIR / 'generator_config.json'
-        try:
-            with open(config_path, 'r') as config_file:
-                generator_config = json.load(config_file)
-        except FileNotFoundError:
-            print(f"Error: Configuration file not found at {config_path}")
-            return
-        except json.JSONDecodeError:
-            print(f"Error: Invalid JSON in configuration file {config_path}")
-            return
-
-        minecraft_version = generator_config['minecraft_version']
-
-        cleanup_old_files(generator_config['mods'])
-
-        for mod in generator_config['mods']:
-            process_mod_config(mod, minecraft_version)
-
+        generator_config = load_generator_config()
+        process_mods(generator_config)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 

@@ -40,5 +40,6 @@
       "tool": "pickaxe",
       "filename": "shiny_block.json"
     }
-  ]
+  ],
+  "enable_logging": true
 }
