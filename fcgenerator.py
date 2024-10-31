@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional
 
 # Farmer's Cutting Generator (fcgenerator)
-# v0.1.1
+# v0.1.1a
 
 @dataclass
 class ModConfig:
@@ -277,7 +277,7 @@ def generate_recipes(config: ModConfig, platform: str, output_dir: Path):
         
         recipe = generate_dye_recipe(config.namespace, input_item, color, count)
         
-        filename = f"{color}_from_tag.json" if input_item.startswith('#') else f"{input_item}.json"
+        filename = f"{color}_dye_from_tag.json" if input_item.startswith('#') else f"{input_item}.json"
         filepath = get_recipe_path(output_dir, filename)
         if not write_json_file(filepath, recipe):
             continue

@@ -6,7 +6,11 @@
   "pack_format": 48,
   "platforms": ["fabric", "neoforge"],
   "wood_recipes": {
-    "woods": ["example_oak", "interesting_pine", "another_mangrove"],
+    "woods": [
+      "example_oak", 
+      "interesting_pine", 
+      "another_mangrove"
+    ],
     "types": ["door", "hanging_sign", "sign", "trapdoor", "log", "wood"]
   },
   "dye_recipes": [
