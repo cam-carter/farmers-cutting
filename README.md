@@ -9,7 +9,7 @@ Current Mods are:
 - [Cinderscapes](cinderscapes/README.md)
 - [Eternal Starlight](eternal_starlight/README.md)
 - [Nether's Exoticism](nethers_exoticism/README.md)
-- [Oh The Biomes We've Gone](bwg/README.md)
+- [Oh The Biomes We've Gone](biomeswevegone/README.md)
 - [Quark](quark/README.md)
 - [Terrestria](terrestria/README.md)
 - [Twilight Forest](twilightforest/README.md)
