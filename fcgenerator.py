@@ -38,15 +38,11 @@ TOOL_ACTIONS = {
 }
 
 PLATFORMS = {
-    "fabric": {
-        "type_key": "fabric:type"
-    },
-    "neoforge": {
-        "type_key": "type"
-    }
+    "fabric": { "type_key": "fabric:type" },
+    "neoforge": { "type_key": "type" }
 }
 
-CLEANUP_DIRS = ['fabric', 'neoforge', 'forge', 'data']
+CLEANUP_DIRS = ['fabric/data', 'neoforge/data', 'forge/data', 'data']
 KNIFE_TOOL_TAG = "c:tools/knife"
 STRIPPING_SOUND = "minecraft:item.axe.strip"
 DEFAULT_PLATFORM = "fabric"

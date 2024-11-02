@@ -1,3 +1,8 @@
+# 0.1.1b (2024-11-2)
+
+## Changed
+- File cleanup now only deletes the `data` folder instead of the entire directory for multiple platforms
+
 # 0.1.1a (2024-10-31)
 
 ## Added
