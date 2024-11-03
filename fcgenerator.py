@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional
 
 # Farmer's Cutting Generator (fcgenerator)
-# v0.1.1a
+# v0.1.2
 
 @dataclass
 class ModConfig:
@@ -127,9 +127,10 @@ def generate_custom_recipe(recipe_info: Dict, platform: str) -> Dict:
     ingredient_value = recipe_info['ingredient'][1:] if is_tag else recipe_info['ingredient']
 
     recipe = create_base_recipe(ingredient_key, ingredient_value)
-    recipe["result"] = [
-        create_recipe_result(recipe_info['result'], recipe_info['count'])
-    ]
+    
+    recipe["result"] = [create_recipe_result(recipe_info['result'], recipe_info['count'])]
+    if 'side_product' in recipe_info:
+        recipe["result"].append(create_recipe_result(recipe_info['side_product']))
 
     if recipe_info['tool'] == "knife":
         recipe["tool"] = {"tag": KNIFE_TOOL_TAG}
@@ -295,7 +296,7 @@ def generate_recipes(config: ModConfig, platform: str, output_dir: Path):
     # Generate custom recipes
     for custom_recipe in config.custom_recipes:
         recipe = generate_custom_recipe(custom_recipe, platform)
-        filepath = get_recipe_path(output_dir, custom_recipe['filename'])
+        filepath = get_recipe_path(output_dir, f"{custom_recipe['filename']}.json")
         if not write_json_file(filepath, recipe, log_enabled=config.enable_logging):
             continue
 

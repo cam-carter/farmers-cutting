@@ -1,3 +1,13 @@
+# 0.1.2 (2024-11-3)
+
+## Added
+- Custom recipe now has an optional `side_product` field, which creates an additional resulting item after a cutting recipe
+  - Works similarly to the one in the `replace_single_recipe` override
+
+## Changed
+- The value for the custom recipe `filename` field should no longer end in `.json`
+- Updated [template.json](template.json) to reflect the above changes
+
 # 0.1.1b (2024-11-2)
 
 ## Changed

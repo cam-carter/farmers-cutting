@@ -62,6 +62,5 @@
       "wood": "florus",
       "recipe_types": ["door", "hanging_sign", "sign", "trapdoor", "stem", "wood"]
     }
-  ],
-  "enable_logging": true
+  ]
 }
