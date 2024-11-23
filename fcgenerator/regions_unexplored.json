@@ -2,7 +2,7 @@
   "name": "Regions Unexplored",
   "namespace": "regions_unexplored",
   "id_suffix": "ru",
-  "data_pack_version": "1.1",
+  "data_pack_version": "1.1a",
   "pack_format": 48,
   "platforms": ["fabric", "neoforge"],
   "wood_recipes": {
@@ -86,7 +86,7 @@
     {"input": "tassel", "color": "light_gray", "count": 2},
     {"input": "cactus_flower", "color": "magenta", "count": 2},
     {"input": "blue_bioshroom", "color": "blue", "count": 2},
-    {"input": "green_bioshroom", "color": "green", "count": 2},
+    {"input": "green_bioshroom", "color": "lime", "count": 2},
     {"input": "pink_bioshroom", "color": "pink", "count": 2},
     {"input": "tall_yellow_bioshroom", "color": "yellow", "count": 2},
     {"input": "cave_hyssop", "color": "orange", "count": 2}
