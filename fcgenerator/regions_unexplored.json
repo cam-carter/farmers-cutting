@@ -2,7 +2,7 @@
   "name": "Regions Unexplored",
   "namespace": "regions_unexplored",
   "id_suffix": "ru",
-  "data_pack_version": "1.0",
+  "data_pack_version": "1.1",
   "pack_format": 48,
   "platforms": ["fabric", "neoforge"],
   "wood_recipes": {
@@ -34,6 +34,8 @@
     "types": ["door", "hanging_sign", "sign", "trapdoor", "log", "wood"]
   },
   "dye_recipes": [
+    {"input": "dead_steppe_shrub", "color": "brown", "count": 2},
+    {"input": "small_desert_shrub", "color": "brown", "count": 2},
     {"input": "alpha_dandelion", "color": "yellow", "count": 2},
     {"input": "alpha_rose", "color": "red", "count": 2},
     {"input": "aster", "color": "light_blue", "count": 2},
@@ -83,6 +85,10 @@
     {"input": "meadow_sage", "color": "blue", "count": 2},
     {"input": "tassel", "color": "light_gray", "count": 2},
     {"input": "cactus_flower", "color": "magenta", "count": 2},
+    {"input": "blue_bioshroom", "color": "blue", "count": 2},
+    {"input": "green_bioshroom", "color": "green", "count": 2},
+    {"input": "pink_bioshroom", "color": "pink", "count": 2},
+    {"input": "tall_yellow_bioshroom", "color": "yellow", "count": 2},
     {"input": "cave_hyssop", "color": "orange", "count": 2}
   ],
   "overrides": [
