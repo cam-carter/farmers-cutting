@@ -1,3 +1,7 @@
+# 0.1.3 (2024-11-23)
+- fixed support for BetterX log & bark
+  - recipe types now use a map to translate recipe type into values to use in the output files
+
 # 0.1.2 (2024-11-3)
 
 ## Added
