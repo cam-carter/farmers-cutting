@@ -4,6 +4,7 @@ A set of datapacks that adds more [Farmer's Delight](https://modrinth.com/mod/fa
 Fabric versions instead use [Farmer's Delight Refabricated](https://modrinth.com/mod/farmers-delight-refabricated)
 
 Current Mods are:
+- [The Aether](aether/README.md)
 - [BetterNether](betternether/README.md)
 - [Biomes O' Plenty](biomesoplenty/README.md)
 - [Cinderscapes](cinderscapes/README.md)
