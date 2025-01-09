@@ -2,7 +2,7 @@
   "name": "Oh The Biomes We've Gone",
   "namespace": "biomeswevegone",
   "id_suffix": "bwg",
-  "data_pack_version": "2.0",
+  "data_pack_version": "2.0a",
   "pack_format": 48,
   "platforms": ["fabric", "neoforge"],
   "wood_recipes": {
@@ -13,8 +13,6 @@
       "cika", 
       "cypress", 
       "ebony", 
-      "embur", 
-      "ether", 
       "fir", 
       "florus", 
       "green_enchanted", 
